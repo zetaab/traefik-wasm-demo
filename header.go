@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/http-wasm/http-wasm-guest-tinygo/handler"
@@ -24,7 +25,8 @@ var mw = &Middleware{}
 func init() {
 	err := json.Unmarshal(handler.Host.GetConfig(), &mw.Config)
 	if err != nil {
-		handler.Host.Log(api.LogLevelError, fmt.Sprintf("Could not load config %v", err)) // TODO: how to panic? api does not have that?
+		handler.Host.Log(api.LogLevelError, fmt.Sprintf("Could not load config %v", err))
+		os.Exit(1)
 	}
 }
 
