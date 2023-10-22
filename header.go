@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/http-wasm/http-wasm-guest-tinygo/handler"
 	"github.com/http-wasm/http-wasm-guest-tinygo/handler/api"
@@ -15,6 +16,7 @@ type Config struct {
 
 type Middleware struct {
 	Config *Config
+	Start  time.Time
 }
 
 var mw = &Middleware{}
@@ -32,8 +34,9 @@ func main() {
 }
 
 // handleRequest implements a simple request middleware.
-func (mw *Middleware) handleRequest(req api.Request, _ api.Response) (next bool, reqCtx uint32) {
+func (mw *Middleware) handleRequest(req api.Request, resp api.Response) (next bool, reqCtx uint32) {
 	handler.Host.Log(api.LogLevelInfo, "hello from handleRequest")
+	mw.Start = time.Now()
 	for k, v := range mw.Config.Headers {
 		req.Headers().Add(k, v)
 	}
@@ -44,5 +47,5 @@ func (mw *Middleware) handleRequest(req api.Request, _ api.Response) (next bool,
 
 // handleResponse implements a simple response middleware.
 func (mw *Middleware) handleResponse(reqCtx uint32, req api.Request, resp api.Response, _ bool) {
-	handler.Host.Log(api.LogLevelInfo, "hello from handleResponse")
+	handler.Host.Log(api.LogLevelInfo, fmt.Sprintf("request took %v %v [%s] %s", time.Since(mw.Start), req.Headers().GetAll("host"), req.GetMethod(), req.GetURI()))
 }
