@@ -36,7 +36,7 @@ func main() {
 
 // handleRequest implements a simple request middleware.
 func (mw *Middleware) handleRequest(req api.Request, resp api.Response) (next bool, reqCtx uint32) {
-	handler.Host.Log(api.LogLevelInfo, "hello from handleRequest")
+	handler.Host.Log(api.LogLevelDebug, "hello from handleRequest debug")
 	mw.Start = time.Now()
 	for k, v := range mw.Config.Headers {
 		req.Headers().Add(k, v)
