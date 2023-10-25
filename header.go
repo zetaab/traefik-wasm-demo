@@ -32,7 +32,6 @@ func init() {
 
 func main() {
 	handler.HandleRequestFn = mw.handleRequest
-	//handler.HandleResponseFn = mw.handleResponse
 }
 
 // handleRequest implements a simple request middleware.
@@ -44,7 +43,5 @@ func (mw *Middleware) handleRequest(req api.Request, resp api.Response) (next bo
 	}
 	// proceed to the next handler on the host.
 	next = true
-
-	resp.Headers().Add("Set-Cookie", "a=b; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=Strict")
 	return
 }
