@@ -6,6 +6,8 @@ summary: '[Demo WASM] Add Request Header'
 
 wasmPath: header.wasm
 
+runtime: wasm
+
 testData:
   Headers:
     X-Demo: test
