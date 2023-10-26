@@ -8,7 +8,11 @@ go run main.go logger.go
 Make request:
 
 ```
-curl localhost:8090/hello
+% curl localhost:8090/hello
+User-Agent: curl/8.1.2
+Accept: */*
+X-Foo: Hello, World!
+Hello, World
 ```
 
 In server logs you should see:

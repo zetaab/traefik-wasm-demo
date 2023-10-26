@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -12,7 +13,13 @@ import (
 )
 
 func helloWorld(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello, World"))
+	for name, values := range r.Header {
+		// Loop over all values for the name.
+		for _, value := range values {
+			w.Write([]byte(fmt.Sprintf("%s: %s\n", name, value)))
+		}
+	}
+	w.Write([]byte("Hello, World\n"))
 }
 
 func main() {
@@ -30,7 +37,13 @@ func makeWasmHandler(next http.Handler) (http.Handler, error) {
 		return nil, err
 	}
 
-	b, err := json.Marshal(map[string]string{"X-foo": "Hello, World!"})
+	config := map[string]interface{}{
+		"headers": map[string]string{
+			"X-foo": "Hello, World!",
+		},
+	}
+
+	b, err := json.Marshal(config)
 	if err != nil {
 		return nil, err
 	}
