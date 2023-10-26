@@ -38,6 +38,7 @@ func main() {
 func (mw *Middleware) handleRequest(req api.Request, resp api.Response) (next bool, reqCtx uint32) {
 	handler.Host.Log(api.LogLevelDebug, "hello from handleRequest debug")
 	mw.Start = time.Now()
+	handler.Host.Log(api.LogLevelDebug, "time is "+mw.Start.String())
 	for k, v := range mw.Config.Headers {
 		req.Headers().Add(k, v)
 	}
