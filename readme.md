@@ -71,28 +71,35 @@ EOF
 # Start a whoami container
 docker run -tid -p0.0.0.0:8081:80 traefik/whoami (or nerdctl run -td -p0.0.0.0:8081:80 traefik/whoami)
 
+# Clone & compile this repository
+mkdir -p plugins-local/src/github.com/zetaab/
+cd plugins-local/src/github.com/zetaab/
+git clone https://github.com/zetaab/traefik-wasm-demo.git
+cd traefik-wasm-demo/
+make build
+
 # Run traefik
 go run ./cmd/traefik/ --configFile=static.yaml
 ```
 
 ```bash
 % curl -H "Host: powpow.demo.traefiklabs.tech" 127.0.0.1:8000
-Hostname: 28cf73dc0e09
+Hostname: 83201d5e81ef
 IP: 127.0.0.1
-IP: 172.17.0.3
-RemoteAddr: 172.17.0.1:48202
+IP: ::1
+IP: 10.4.0.2
+IP: fe80::a0c7:afff:fe81:ff5a
+RemoteAddr: 10.4.0.1:55840
 GET / HTTP/1.1
 Host: powpow.demo.traefiklabs.tech
-User-Agent: curl/8.1.2
+User-Agent: curl/7.68.0
 Accept: */*
 Accept-Encoding: gzip
-Foo: Bar
-Heh: hah
-Huh: foobar
+Local: foo
 X-Forwarded-For: 127.0.0.1
 X-Forwarded-Host: powpow.demo.traefiklabs.tech
 X-Forwarded-Port: 80
 X-Forwarded-Proto: http
-X-Forwarded-Server: xx
+X-Forwarded-Server: nodes-xx-lao0mz
 X-Real-Ip: 127.0.0.1
 ```
