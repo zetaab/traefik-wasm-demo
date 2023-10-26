@@ -14,12 +14,9 @@ make build
 
 ```bash
 # In the new terminal
-git clone git@github.com:mmatur/traefik.git
+git clone https://github.com/zetaab/traefik.git
 cd traefik/
-git checkout feat/wasm
-
-# Copy wasm middleware file
-cp ../header.wasm .
+git checkout feature/httpwasm
 
 # Create static configuration
 cat <<EOF > static.yaml
@@ -43,9 +40,7 @@ metrics:
 
 experimental:
   localPlugins:
-    example:
-      moduleName: github.com/traefik/plugindemo
-    wasmExample:
+    wasmLocalExample:
       moduleName: github.com/zetaab/traefik-wasm-demo
 EOF
 
@@ -54,12 +49,11 @@ cat <<EOF > dynamic.yaml
 http:
   routers:
     customer1:
-      rule: Host(\`powpow.demo.traefiklabs.tech\`)
+      rule: Host(`powpow.demo.traefiklabs.tech`)
       service: customer1
       middlewares:
-        - my-plugin
-        - my-plugin2
-
+        - localWasm
+      
   services:
     customer1:
       loadbalancer:
@@ -67,17 +61,11 @@ http:
           - url: "http://127.0.0.1:8081"
 
   middlewares:
-    my-plugin:
+    localWasm:
       plugin:
-        example:
+        wasmLocalExample:
           headers:
-            Foo: Bar
-    my-plugin2:
-      plugin:
-        wasmExample:
-          headers:
-            heh: hah
-            huh: foobar
+            local: foo
 EOF
 
 # Start a whoami container
