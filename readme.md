@@ -49,7 +49,7 @@ cat <<EOF > dynamic.yaml
 http:
   routers:
     customer1:
-      rule: Host(`powpow.demo.traefiklabs.tech`)
+      rule: Host(\`powpow.demo.traefiklabs.tech\`)
       service: customer1
       middlewares:
         - localWasm
@@ -69,7 +69,7 @@ http:
 EOF
 
 # Start a whoami container
-docker run -tid -p0.0.0.0:8081:80 traefik/whoami
+docker run -tid -p0.0.0.0:8081:80 traefik/whoami (or nerdctl run -td -p0.0.0.0:8081:80 traefik/whoami)
 
 # Run traefik
 go run ./cmd/traefik/ --configFile=static.yaml
