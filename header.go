@@ -32,6 +32,7 @@ func init() {
 
 func main() {
 	handler.HandleRequestFn = mw.handleRequest
+	handler.HandleResponseFn = mw.handleResponse
 }
 
 // handleRequest implements a simple request middleware.
@@ -45,4 +46,9 @@ func (mw *Middleware) handleRequest(req api.Request, resp api.Response) (next bo
 	// proceed to the next handler on the host.
 	next = true
 	return
+}
+
+// handleResponse implements a simple response middleware.
+func (mw *Middleware) handleResponse(_ uint32, req api.Request, resp api.Response, _ bool) {
+	handler.Host.Log(api.LogLevelDebug, time.Since(mw.Start).String())
 }

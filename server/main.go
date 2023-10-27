@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/http-wasm/http-wasm-host-go/handler"
 	wasm "github.com/http-wasm/http-wasm-host-go/handler/nethttp"
 	"github.com/rs/zerolog"
+	"github.com/tetratelabs/wazero"
 )
 
 func helloWorld(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +21,7 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(fmt.Sprintf("%s: %s\n", name, value)))
 		}
 	}
+	time.Sleep(1 * time.Second)
 	w.Write([]byte("Hello, World\n"))
 }
 
@@ -50,6 +53,7 @@ func makeWasmHandler(next http.Handler) (http.Handler, error) {
 
 	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	opts := []handler.Option{
+		handler.ModuleConfig(wazero.NewModuleConfig().WithSysWalltime()),
 		handler.Logger(initWasmLogger(&logger)),
 		handler.GuestConfig(b),
 	}
